@@ -21,6 +21,12 @@ PORT=8080 node index.js secret_... MY PLAN1
 
 ```
 http://your-ical4notion-domain.com?database_id=YOUR_DATABASE_ID
+http://your-ical4notion-domain.com?database_id=YOUR_DATABASE_ID&names=refracta,fresia
+// filter by names parameter
+http://your-ical4notion-domain.com?database_id=YOUR_DATABASE_ID&emails=refracta@example.com,fresia@example.com
+// filter by emails parameter
+http://your-ical4notion-domain.com?database_id=YOUR_DATABASE_ID&names=refracta,fresia&emails=refracta@example.com,fresia@example.com
+// filter by names, emails parameter
 ```
 
 You can access ical from the url above.
