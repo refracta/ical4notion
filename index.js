@@ -6,8 +6,8 @@ const httpServer = http.createServer(app);
 
 const ical = require('ical-generator');
 const {Client} = require('@notionhq/client');
-let name = process.argv.slice(3).join(' ');
-name = name !== '' ? name : 'ical4notion';
+let icalName = process.argv.slice(3).join(' ');
+icalName = icalName !== '' ? icalName : 'ical4notion';
 
 const notion = new Client({
     auth: process.argv[2]
@@ -30,12 +30,18 @@ function setLastTimeOfDay(date) {
     date.setSeconds(59);
 }
 
-async function getCalender(database_id) {
+async function getCalender(database_id, names, emails) {
     const pages = (await notion.databases.query({
         database_id
-    })).results.filter(page => Object.values(page.properties).find(prop => prop.type === 'date' && prop?.date?.start));
+    })).results.filter(page => {
+        let properties = Object.values(page.properties);
+        let isHaveDate = properties.some(prop => prop.type === 'date' && prop?.date?.start);
+        let isNameMatchedPage = names?.length > 0 ? properties.some(prop => prop.type === 'people' && prop.people.find(person => names.includes(person?.name))) : false;
+        let isEmailMatchedPage = emails?.length > 0 ? properties.some(prop => prop.type === 'people' && prop.people.find(person => emails.includes(person?.person?.email))) : false;
+        return isHaveDate && ((names || emails) ? (isNameMatchedPage || isEmailMatchedPage) : true);
+    });
 
-    let cal = ical({name});
+    let cal = ical({name: icalName});
     for (let page of pages) {
         let prop = Object.values(page.properties);
         let title = prop.find(prop => prop.type === 'title').title.find(iProp => iProp?.plain_text)?.plain_text;
@@ -60,10 +66,13 @@ async function getCalender(database_id) {
 
 app.get('/', async function (req, res, next) {
     let database_id = req?.query?.database_id;
+    let names = req?.query?.names?.split(',');
+    let emails = req?.query?.emails?.split(',');
+
     let ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
     console.log(`REQUEST: ip=${ip}, database_id=${database_id}`);
     if (database_id) {
-        (await getCalender(database_id)).serve(res);
+        (await getCalender(database_id, names, emails)).serve(res);
     } else {
         res.header('Content-Type', 'text/plain');
         res.send(JSON.stringify({status: 'failed', reason: 'database_id is empty.'}));
