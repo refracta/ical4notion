@@ -1,7 +1,7 @@
 {
   "name": "ical4notion",
   "version": "1.0.0",
-  "description": "",
+  "description": "Simple tool to host http ical using your notion database",
   "main": "index.js",
   "scripts": {
 	"start": "node index.js"
