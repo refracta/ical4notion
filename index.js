@@ -70,7 +70,7 @@ app.get('/', async function (req, res, next) {
     let emails = req?.query?.emails?.split(',');
 
     let ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-    console.log(`REQUEST: ip=${ip}, database_id=${database_id}`);
+    console.log(`REQUEST: ip=${ip}, database_id=${database_id}, names=${names}, emails=${emails}`);
     if (database_id) {
         (await getCalender(database_id, names, emails)).serve(res);
     } else {
