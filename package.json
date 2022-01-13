@@ -4,7 +4,7 @@
   "description": "Simple tool to host http ical using your notion database",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js [NOTION_API_KEY] [CALENDAR NAME]",
+    "start": "node index.js [NOTION_API_KEY] [CALENDAR_NAME]",
     "gae-init": "echo runtime: nodejs16 >> app.yaml"
   },
   "keywords": [],

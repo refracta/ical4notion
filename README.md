@@ -13,7 +13,7 @@ npm install
 ## Run
 
 ```
-PORT=[PORT] node index.js [NOTION_API_KEY] [CALENDAR NAME]
+PORT=[PORT] node index.js [NOTION_API_KEY] [CALENDAR_NAME]
 
 Example) 
 PORT=8080 node index.js secret_... MY PLAN1
