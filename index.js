@@ -13,21 +13,22 @@ const notion = new Client({
     auth: process.argv[2]
 });
 
-function toDate(str, isEnd) {
+function toDate(str, allDay) {
     let date = new Date(str);
     if (str.match(/^\d{4}-\d{2}-\d{2}$/)) {
-        date.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
-        if (isEnd) {
-            setLastTimeOfDay(date);
-        }
+        if (!allDay) {
+			date.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
+		}
     }
     return date;
 }
 
-function setLastTimeOfDay(date) {
+function toLastTimeOfDay(date) {
+	date = new Date(date.getTime());
     date.setHours(23);
     date.setMinutes(59);
     date.setSeconds(59);
+	return date;
 }
 
 async function getCalender(database_id, names, emails) {
@@ -49,8 +50,8 @@ async function getCalender(database_id, names, emails) {
 
         end = end ? end : start;
         let allDay = start === end ? true : false;
-        start = toDate(start);
-        end = toDate(end, true);
+        start = toDate(start, allDay);
+        end = allDay ? undefined : toLastTimeOfDay(toDate(end));
 
         cal.createEvent({
             allDay,
@@ -72,7 +73,13 @@ app.get('/', async function (req, res, next) {
     let ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
     console.log(`REQUEST: ip=${ip}, database_id=${database_id}, names=${names}, emails=${emails}`);
     if (database_id) {
-        (await getCalender(database_id, names, emails)).serve(res);
+		try {
+			(await getCalender(database_id, names, emails)).serve(res);
+		} catch (e) {
+			console.error(e);
+			res.header('Content-Type', 'text/plain');
+			res.send(JSON.stringify({status: 'failed', reason: 'Failed to create calendar.'}));
+		}
     } else {
         res.header('Content-Type', 'text/plain');
         res.send(JSON.stringify({status: 'failed', reason: 'database_id is empty.'}));
