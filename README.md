@@ -13,7 +13,7 @@ npm install
 ## Run
 
 ```
-PORT=[PORT] node index.js [NOTION_KEY] [ICAL_NAME]
+PORT=[PORT] node index.js [NOTION_API_KEY] [CALENDAR NAME]
 
 Example) 
 PORT=8080 node index.js secret_... MY PLAN1
@@ -33,5 +33,5 @@ You can access ical from the url above.
 
 ## Reference
 
-- [NOTION_KEY](https://www.notion.so/my-integrations)
+- [NOTION_API_KEY](https://www.notion.so/my-integrations)
 - [database_id](https://developers.notion.com/docs/getting-started#step-2-share-a-database-with-your-integration)
