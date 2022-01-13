@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js [NOTION_API_KEY] [CALENDAR NAME]",
-	"gae-init": "echo runtime: nodejs16 >> app.yaml"
+    "gae-init": "echo runtime: nodejs16 >> app.yaml"
   },
   "keywords": [],
   "author": "refracta",
