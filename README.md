@@ -47,4 +47,4 @@ gcloud app deploy
 - [Cloud SDK](https://cloud.google.com/sdk/docs/install)
 - [Node.js Runtime (Google Cloud)](https://cloud.google.com/appengine/docs/standard/nodejs/runtime)
 - [GoogleCloudPlatform/nodejs-docs-samples](https://github.com/GoogleCloudPlatform/nodejs-docs-samples/tree/main/appengine/hello-world/standard)
-
+- [Google Calendar - Add by URL](https://calendar.google.com/calendar/u/0/r/settings/addbyurl)
