@@ -31,7 +31,20 @@ http://your-ical4notion-domain.com?database_id=YOUR_DATABASE_ID&names=refracta,f
 
 You can access ical from the url above.
 
+## Install & Run (Google App Engine)
+```
+gcloud init
+npm run gae-init
+sed -i 's/NOTION_API_KEY/YOUR_NOTION_API_KEY/' package.json
+sed -i 's/CALENDAR_NAME/YOUR_CALENDAR_NAME/' package.json
+gcloud app deploy
+```
+
 ## Reference
 
 - [NOTION_API_KEY](https://www.notion.so/my-integrations)
 - [database_id](https://developers.notion.com/docs/getting-started#step-2-share-a-database-with-your-integration)
+- [Cloud SDK](https://cloud.google.com/sdk/docs/install)
+- [Node.js Runtime (Google Cloud)](https://cloud.google.com/appengine/docs/standard/nodejs/runtime)
+- [GoogleCloudPlatform/nodejs-docs-samples](https://github.com/GoogleCloudPlatform/nodejs-docs-samples/tree/main/appengine/hello-world/standard)
+
