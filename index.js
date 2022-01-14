@@ -13,14 +13,12 @@ const notion = new Client({
     auth: process.argv[2]
 });
 
-function toDate(str, allDay) {
-    let date = new Date(str);
-    if (str.match(/^\d{4}-\d{2}-\d{2}$/)) {
-        if (!allDay) {
-            date.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
-        }
-    }
-    return date;
+function isIncludeTime(str){
+	return str.match(/^\d{4}-\d{2}-\d{2}$/) ? false : true;
+}
+
+function toTimezoneFixedDate(date){
+	return new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
 }
 
 function toLastTimeOfDay(date) {
@@ -48,11 +46,27 @@ async function getCalender(database_id, names, emails) {
         let title = prop.find(prop => prop.type === 'title').title.find(iProp => iProp?.plain_text)?.plain_text
         let participants = Array.from(new Set(prop.filter(prop => prop.type === 'people').map(prop => prop.people.map(person => person.name)).flat())).join(', ');
         let {start, end} = prop.find(prop => prop.type === 'date')?.date;
+		let allDay = false;
 
-        end = end ? end : start;
-        let allDay = start === end ? true : false;
-        start = toDate(start, allDay);
-        end = allDay ? undefined : toLastTimeOfDay(toDate(end));
+		let isTimeFormat = isIncludeTime(start);
+
+		if(start && !end) {
+			if(isTimeFormat) {
+				start = new Date(start);
+				end = toLastTimeOfDay(start);
+			} else {
+				start = toLastTimeOfDay(toTimezoneFixedDate(new Date(start)));
+				allDay = true;
+			}
+		} else if (start && end) {
+			if(isTimeFormat) {
+				start = new Date(start);
+				end = new Date(end);
+			} else {
+				start = toTimezoneFixedDate(new Date(start));
+				end = toLastTimeOfDay(toTimezoneFixedDate(new Date(end)));
+			}
+		}
 
         cal.createEvent({
             allDay,
