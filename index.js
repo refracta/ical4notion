@@ -29,7 +29,7 @@ function toLastTimeOfDay(date) {
     return date;
 }
 
-async function getCalender(database_id, names, emails) {
+async function getCalendar(database_id, names, emails) {
     const pages = (await notion.databases.query({
         database_id
     })).results.filter(page => {
@@ -90,7 +90,7 @@ app.get('/', async function (req, res, next) {
     console.log(`REQUEST: ip=${ip}, database_id=${database_id}, names=${names}, emails=${emails}`);
     if (database_id) {
         try {
-            (await getCalender(database_id, names, emails)).serve(res);
+            (await getCalendar(database_id, names, emails)).serve(res);
         } catch (e) {
             console.error(e);
             res.header('Content-Type', 'text/plain');
